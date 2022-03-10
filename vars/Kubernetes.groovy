@@ -3,38 +3,38 @@ def call(Map config=[:], Closure body) {
 stage("Kubernetes Deployment"){
   steps {
 	  script {
-	  if( (env.GIT_BRANCH.contains("test")) || (env.GIT_BRANCH.contains("develop")) || (env.GIT_BRANCH == "main") ) {
+	  if( (config.branch.contains("test")) || (config.branch.contains("develop")) || (config.branch == "main") ) {
 		  sh """ docker login -u $DOCKER_USER -p $DOCKER_PASS """
-	  if(env.GIT_BRANCH=="main"){
-		   sh """
-				export IMAGE_NAME=bala2805/nodejs:main-${env.BUILD_ID}
-				export NAMESPACE=${env.GIT_BRANCH}
-				cat deploy.yml | envsubst > deployment.yml
+	  if(config.branch =="main"){
+		   sh """       docker pull ${config.image}:main-${env.BUILD_ID}
+				export IMAGE_NAME=${config.image}:main-${env.BUILD_ID}
+				export NAMESPACE=${config.branch}
+				cat deploy.yml | envsubst > ${config.manifestfile}
 			"""
 		 }
-	   if(env.GIT_BRANCH.contains("develop")){
+	   if(config.branch.contains("develop")){
 		   sh """
-				docker pull bala2805/nodejs:dev-${env.BUILD_ID}
-				export IMAGE_NAME=bala2805/nodejs:dev-${env.BUILD_ID}
-				export NAMESPACE=${env.GIT_BRANCH}
-				cat deploy.yml | envsubst > deployment.yml
+				docker pull ${config.image}:dev-${env.BUILD_ID}
+				export IMAGE_NAME=${config.image}:dev-${env.BUILD_ID}
+				export NAMESPACE=${config.branch}
+				cat deploy.yml | envsubst > ${config.manifestfile}
 			"""
 		 }
-		 if(env.GIT_BRANCH.contains("test")){
+		 if(config.branch.contains("test")){
 		   sh """
-				docker pull bala2805/nodejs:test-${env.BUILD_ID}
-				export IMAGE_NAME=bala2805/nodejs:test-${env.BUILD_ID}
-				export NAMESPACE=${env.GIT_BRANCH}
-				cat deploy.yml | envsubst > deployment.yml
+				docker pull ${config.image}:test-${env.BUILD_ID}
+				export IMAGE_NAME=${config.image}:test-${env.BUILD_ID}
+				export NAMESPACE=${config.branch}
+				cat deploy.yml | envsubst > ${config.manifestfile}
 			"""
 		 }
 		step([
 			$class: 'KubernetesEngineBuilder',
-			projectId: env.PROJECT_ID,
-			clusterName: env.CLUSTER_NAME,
-			location: env.LOCATION,
+			projectId: config.project_id,
+			clusterName: config.cluster_name,
+			location: config.location,
 			manifestPattern: 'deployment.yml',
-			credentialsId: env.CREDENTIALS_ID,
+			credentialsId: config.credential_id,
 			verifyDeployments: false])
 		}
 	 }
@@ -43,3 +43,4 @@ stage("Kubernetes Deployment"){
    
         body()
 }
+# branch,image,manifestfile,project_id,cluster_name,location,credential_id
