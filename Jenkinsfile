@@ -1,7 +1,7 @@
 pipeline{
     agent any
     environment {
-        PROJECT_NAME = 'Hello_world'
+        PROJECT_NAME = 'Hello_maven'
     }
     stages{
         stage('Checkout'){
