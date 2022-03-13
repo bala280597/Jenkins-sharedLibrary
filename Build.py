@@ -10,9 +10,9 @@ def sql_insert_data(password,repo,job,build_no,time,table_name):
              "VALUES (%(repo)s, %(job)s, %(build_no)s, %(time)s )")
   data_app = {
       'repo': repo,
-      'build': job,
-      'deploy': build_no,
-      'jobname': time
+      'job': job,
+      'build_no': build_no,
+      'time': time
   }
   cursor.execute(add_app, data_app)
   cnx.commit()
