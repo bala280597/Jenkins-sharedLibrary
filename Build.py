@@ -17,7 +17,6 @@ def sql_insert_data(password,repo,job,build_no,time,table_name):
   cursor.execute(add_app, data_app)
   cnx.commit()
   cnx.close()
-  self.sonar_automation()
 
 if __name__ == '__main__':
     password = sys.argv[1]
