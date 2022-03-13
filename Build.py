@@ -2,7 +2,7 @@ def sql_insert_data(password,repo,job,build_no,time,table_name):
   cnx = mysql.connector.connect(user='root', password=password,
                                 host='34.70.1.185',database='metrics')
   cursor = cnx.cursor()
-  add_app = (f"INSERT INTO {table_name} "
+  add_app = (f"INSERT INTO {table_name}"
              "(APP_NAME,JENKINS_JOB_NAME,BUILD_NUMBER,BUILD_TIME)"
              "VALUES (%(repo)s, %(job)s, %(build_no)s, %(time)s )")
   data_app = {
