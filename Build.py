@@ -1,3 +1,6 @@
+import sys
+
+import mysql.connector
 def sql_insert_data(password,repo,job,build_no,time,table_name):
   cnx = mysql.connector.connect(user='root', password=password,
                                 host='34.70.1.185',database='metrics')
